@@ -1,6 +1,7 @@
 package events
 
 import (
+	"fmt"
 	"sort"
 	"sync"
 
@@ -85,9 +86,17 @@ func runProjectCmdsParallelGroups(
 	for _, group := range groups {
 		res := runProjectCmdsParallel(ctx, group, runnerFunc, poolSize)
 		results = append(results, res.ProjectResults...)
+		for _, r := range res.ProjectResults {
+			ctx.Log.Info(
+				fmt.Sprintf("projectId: %s \n plan status: %s \n failure: %s \n error: %s \n command: %d (Plan is 1)",
+				r.Workspace, r.PlanStatus().String(), r.Failure, r.Error, r.Command),
+			)
+		}
 		if res.HasErrors() && group[0].AbortOnExcecutionOrderFail {
 			ctx.Log.Info("abort on execution order when failed")
 			break
+		} else {
+			ctx.Log.Info(fmt.Sprintf("no errors in the %d results", len(res.ProjectResults)))
 		}
 	}
 
