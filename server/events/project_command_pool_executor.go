@@ -88,15 +88,15 @@ func runProjectCmdsParallelGroups(
 		results = append(results, res.ProjectResults...)
 		for _, r := range res.ProjectResults {
 			ctx.Log.Info(
-				fmt.Sprintf("projectId: %s \n plan status: %s \n failure: %s \n error: %s \n command: %d (Plan is 1)",
-				r.Workspace, r.PlanStatus().String(), r.Failure, r.Error, r.Command),
+				fmt.Sprintf("projectId: %s \n plan status: %s \n failure: %s \n error: %s \n command: %d (Plan is 1), hasErrors: %t",
+				r.Workspace, r.PlanStatus().String(), r.Failure, r.Error, r.Command, res.HasErrors()),
 			)
 		}
 		if res.HasErrors() && group[0].AbortOnExcecutionOrderFail {
 			ctx.Log.Info("abort on execution order when failed")
 			break
 		} else {
-			ctx.Log.Info(fmt.Sprintf("no errors in the %d results", len(res.ProjectResults)))
+			ctx.Log.Info(fmt.Sprintf("no errors in the %d results, AbortOnExcecutionOrderFail: %t", len(res.ProjectResults), group[0].AbortOnExcecutionOrderFail))
 		}
 	}
 
