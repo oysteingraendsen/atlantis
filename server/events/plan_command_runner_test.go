@@ -222,6 +222,8 @@ func TestPlanCommandRunner_ExecutionOrder(t *testing.T) {
 			ProjectResults: []command.ProjectResult{
 				{
 					Command: command.Plan,
+					Failure: "",
+					
 					Error:   errors.New("Shabang!"),
 				},
 				{

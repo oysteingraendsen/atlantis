@@ -206,6 +206,7 @@ func TestDefaultProjectCommandBuilder_BuildSinglePlanApplyCommand(t *testing.T) 
 		ExpParallelApply bool
 		ExpParallelPlan  bool
 		ExpNoProjects    bool
+		ExpAbortOnEx     bool
 	}{
 		{
 			Description: "no atlantis.yaml",
@@ -408,6 +409,31 @@ projects:
 			ExpProjectName:   "myproject",
 			ExpApplyReqs:     []string{},
 		},
+		{
+			Description: "atlantis.yaml with AbortOnExcecutionOrderFail Set to true",
+			Cmd: events.CommentCommand{
+				Name:        command.Plan,
+				RepoRelDir:  ".",
+				Workspace:   "default",
+				ProjectName: "myproject",
+			},
+			AtlantisYAML: `
+version: 3
+parallel_plan: true
+abort_on_execution_order_fail: true
+projects:
+- name: myproject
+  dir: .
+  workspace: myworkspace
+`,
+			ExpParallelPlan:  true,
+			ExpParallelApply: false,
+			ExpDir:           ".",
+			ExpWorkspace:     "myworkspace",
+			ExpProjectName:   "myproject",
+			ExpApplyReqs:     []string{},
+			ExpAbortOnEx:     true,
+		},
 	}
 
 	logger := logging.NewNoopLogger(t)
@@ -492,6 +518,7 @@ projects:
 				Equals(t, c.ExpApplyReqs, actCtx.ApplyRequirements)
 				Equals(t, c.ExpParallelApply, actCtx.ParallelApplyEnabled)
 				Equals(t, c.ExpParallelPlan, actCtx.ParallelPlanEnabled)
+				Equals(t, c.ExpAbortOnEx, actCtx.AbortOnExcecutionOrderFail)
 			})
 		}
 	}

@@ -711,7 +711,7 @@ func (p *DefaultProjectCommandBuilder) buildProjectCommandCtx(ctx *command.Conte
 		automerge = repoCfgPtr.Automerge
 		parallelApply = repoCfgPtr.ParallelApply
 		parallelPlan = repoCfgPtr.ParallelPlan
-		abortOnExcecutionOrderFail = *&repoCfgPtr.AbortOnExcecutionOrderFail
+		abortOnExcecutionOrderFail = repoCfgPtr.AbortOnExcecutionOrderFail
 	}
 
 	if len(matchingProjects) > 0 {
