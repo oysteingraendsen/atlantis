@@ -437,12 +437,12 @@ func TestApplyCommandRunner_ExecutionOrder(t *testing.T) {
 			Description: "Don't block when abortOnExcecutionOrderFail is not set",
 			ProjectContexts: []command.ProjectContext{
 				{
-					ExecutionOrderGroup:        0,
-					ProjectName:                "First",
+					ExecutionOrderGroup: 0,
+					ProjectName:         "First",
 				},
 				{
-					ExecutionOrderGroup:        1,
-					ProjectName:                "Second",
+					ExecutionOrderGroup: 1,
+					ProjectName:         "Second",
 				},
 			},
 			ProjectResults: []command.ProjectResult{

@@ -11,12 +11,14 @@ import (
 type prjCmdRunnerFunc func(ctx command.ProjectContext) command.ProjectResult
 
 func runProjectCmdsParallel(
+	ctx *command.Context,
 	cmds []command.ProjectContext,
 	runnerFunc prjCmdRunnerFunc,
 	poolSize int,
 ) command.Result {
 	var results []command.ProjectResult
 	mux := &sync.Mutex{}
+	ctx.Log.Info("DEBUG: in runProjectCmdsParallelGroups")
 
 	wg := sizedwaitgroup.New(poolSize)
 	for _, pCmd := range cmds {
@@ -77,10 +79,11 @@ func runProjectCmdsParallelGroups(
 	runnerFunc prjCmdRunnerFunc,
 	poolSize int,
 ) command.Result {
+	ctx.Log.Info("DEBUG: in runProjectCmdsParallelGroups")
 	var results []command.ProjectResult
 	groups := splitByExecutionOrderGroup(cmds)
 	for _, group := range groups {
-		res := runProjectCmdsParallel(group, runnerFunc, poolSize)
+		res := runProjectCmdsParallel(ctx, group, runnerFunc, poolSize)
 		results = append(results, res.ProjectResults...)
 		if res.HasErrors() && group[0].AbortOnExcecutionOrderFail {
 			ctx.Log.Info("abort on execution order when failed")
