@@ -127,6 +127,8 @@ func (cb *DefaultProjectCommandContextBuilder) BuildProjectContext(
 		prjCfg.TerraformVersion = terraformClient.DetectVersion(ctx.Log, filepath.Join(repoDir, prjCfg.RepoRelDir))
 	}
 
+	ctx.Log.Info("Workspace %s set abortOnExcecutionOrderFail to %t", prjCfg.Workspace, abortOnExcecutionOrderFail)
+
 	projectCmdContext := newProjectCommandContext(
 		ctx,
 		cmdName,

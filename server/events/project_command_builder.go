@@ -355,6 +355,7 @@ func (p *DefaultProjectCommandBuilder) buildAllCommandsByCfg(ctx *command.Contex
 			return nil, errors.Wrapf(err, "parsing %s", repoCfgFile)
 		}
 		ctx.Log.Info("successfully parsed %s file", repoCfgFile)
+		ctx.Log.Info("successfully parsed AbortOnExcecutionOrderFail: %t", repoCfg.AbortOnExcecutionOrderFail)
 	}
 
 	moduleInfo, err := FindModuleProjects(repoDir, p.AutoDetectModuleFiles)
@@ -372,6 +373,7 @@ func (p *DefaultProjectCommandBuilder) buildAllCommandsByCfg(ctx *command.Contex
 
 		for _, mp := range matchingProjects {
 			ctx.Log.Debug("determining config for project at dir: %q workspace: %q", mp.Dir, mp.Workspace)
+			ctx.Log.Info("AbortOnExcecutionOrderFail: %t", repoCfg.AbortOnExcecutionOrderFail)
 			mergedCfg := p.GlobalCfg.MergeProjectCfg(ctx.Log, ctx.Pull.BaseRepo.ID(), mp, repoCfg)
 
 			projCtxs = append(projCtxs,
@@ -440,6 +442,10 @@ func (p *DefaultProjectCommandBuilder) buildAllCommandsByCfg(ctx *command.Contex
 	sort.Slice(projCtxs, func(i, j int) bool {
 		return projCtxs[i].ExecutionOrderGroup < projCtxs[j].ExecutionOrderGroup
 	})
+
+	for _, project := range projCtxs {
+		ctx.Log.Info("Project %s: \n ParallelPlanEnabled: %t \n AbortOnExcecutionOrderFail: %t ", project.Workspace, project.ParallelPlanEnabled, project.AbortOnExcecutionOrderFail)
+	}
 
 	return projCtxs, nil
 }
