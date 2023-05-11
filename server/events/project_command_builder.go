@@ -421,6 +421,8 @@ func (p *DefaultProjectCommandBuilder) buildAllCommandsByCfg(ctx *command.Contex
 				abortOnExcecutionOrderFail = repoCfg.AbortOnExcecutionOrderFail
 			}
 			pCfg := p.GlobalCfg.DefaultProjCfg(ctx.Log, ctx.Pull.BaseRepo.ID(), mp.Path, pWorkspace)
+			ctx.Log.Info("AbortOnExcecutionOrderFail: %t", abortOnExcecutionOrderFail)
+			ctx.Log.Info("AbortOnExcecutionOrderFail: %t", repoCfg.AbortOnExcecutionOrderFail)
 
 			projCtxs = append(projCtxs,
 				p.ProjectCommandContextBuilder.BuildProjectContext(
@@ -730,7 +732,7 @@ func (p *DefaultProjectCommandBuilder) buildProjectCommandCtx(ctx *command.Conte
 		for _, mp := range matchingProjects {
 			ctx.Log.Debug("Merging config for project at dir: %q workspace: %q", mp.Dir, mp.Workspace)
 			projCfg = p.GlobalCfg.MergeProjectCfg(ctx.Log, ctx.Pull.BaseRepo.ID(), mp, *repoCfgPtr)
-
+			ctx.Log.Info("AbortOnExcecutionOrderFail: %t", abortOnExcecutionOrderFail)
 			projCtxs = append(projCtxs,
 				p.ProjectCommandContextBuilder.BuildProjectContext(
 					ctx,
@@ -753,7 +755,7 @@ func (p *DefaultProjectCommandBuilder) buildProjectCommandCtx(ctx *command.Conte
 			ctx.Log.Debug("silencing is in effect, project will be ignored")
 			return []command.ProjectContext{}, nil
 		}
-
+		ctx.Log.Info("AbortOnExcecutionOrderFail: %t", abortOnExcecutionOrderFail)
 		projCfg = p.GlobalCfg.DefaultProjCfg(ctx.Log, ctx.Pull.BaseRepo.ID(), repoRelDir, workspace)
 		projCtxs = append(projCtxs,
 			p.ProjectCommandContextBuilder.BuildProjectContext(
@@ -775,7 +777,10 @@ func (p *DefaultProjectCommandBuilder) buildProjectCommandCtx(ctx *command.Conte
 	if err := p.validateWorkspaceAllowed(repoCfgPtr, repoRelDir, workspace); err != nil {
 		return []command.ProjectContext{}, err
 	}
-
+	for _, project := range projCtxs {
+		ctx.Log.Info("Workspace: %s abortOnFail: %t",project.Workspace, project.AbortOnExcecutionOrderFail)
+	}
+		
 	return projCtxs, nil
 }
 

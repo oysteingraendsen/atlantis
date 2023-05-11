@@ -174,6 +174,7 @@ func (cb *PolicyCheckProjectCommandContextBuilder) BuildProjectContext(
 	terraformClient terraform.Client,
 ) (projectCmds []command.ProjectContext) {
 	ctx.Log.Debug("PolicyChecks are enabled")
+	ctx.Log.Info("AbortOnExcecutionOrderFail: %t", abortOnExcecutionOrderFail)
 
 	// If TerraformVersion not defined in config file look for a
 	// terraform.require_version block.
