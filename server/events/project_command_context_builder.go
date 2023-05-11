@@ -180,6 +180,7 @@ func (cb *PolicyCheckProjectCommandContextBuilder) BuildProjectContext(
 	if prjCfg.TerraformVersion == nil {
 		prjCfg.TerraformVersion = terraformClient.DetectVersion(ctx.Log, filepath.Join(repoDir, prjCfg.RepoRelDir))
 	}
+	ctx.Log.Info("AbortOnExcecutionOrderFail: %t", abortOnExcecutionOrderFail)
 
 	projectCmds = cb.ProjectCommandContextBuilder.BuildProjectContext(
 		ctx,
@@ -195,6 +196,7 @@ func (cb *PolicyCheckProjectCommandContextBuilder) BuildProjectContext(
 		abortOnExcecutionOrderFail,
 		terraformClient,
 	)
+	ctx.Log.Info("AbortOnExcecutionOrderFail: %t", abortOnExcecutionOrderFail)
 
 	if cmdName == command.Plan {
 		ctx.Log.Debug("Building project command context for %s", command.PolicyCheck)
@@ -219,6 +221,7 @@ func (cb *PolicyCheckProjectCommandContextBuilder) BuildProjectContext(
 			ctx.PullRequestStatus,
 		))
 	}
+	ctx.Log.Info("AbortOnExcecutionOrderFail: %t", abortOnExcecutionOrderFail)
 
 	return
 }
