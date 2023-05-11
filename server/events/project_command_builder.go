@@ -375,6 +375,7 @@ func (p *DefaultProjectCommandBuilder) buildAllCommandsByCfg(ctx *command.Contex
 			ctx.Log.Debug("determining config for project at dir: %q workspace: %q", mp.Dir, mp.Workspace)
 			ctx.Log.Info("AbortOnExcecutionOrderFail: %t", repoCfg.AbortOnExcecutionOrderFail)
 			mergedCfg := p.GlobalCfg.MergeProjectCfg(ctx.Log, ctx.Pull.BaseRepo.ID(), mp, repoCfg)
+			ctx.Log.Info("AbortOnExcecutionOrderFail: %t", repoCfg.AbortOnExcecutionOrderFail)
 
 			projCtxs = append(projCtxs,
 				p.ProjectCommandContextBuilder.BuildProjectContext(

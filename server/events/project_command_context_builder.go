@@ -62,10 +62,12 @@ func (cb *CommandScopedStatsProjectCommandContextBuilder) BuildProjectContext(
 	terraformClient terraform.Client,
 ) (projectCmds []command.ProjectContext) {
 	cb.ProjectCounter.Inc(1)
+	ctx.Log.Info("AbortOnExcecutionOrderFail: %t", abortOnExcecutionOrderFail)
 
 	cmds := cb.ProjectCommandContextBuilder.BuildProjectContext(
 		ctx, cmdName, subCmdName, prjCfg, commentFlags, repoDir, automerge, parallelApply, parallelPlan, verbose, abortOnExcecutionOrderFail, terraformClient,
 	)
+	ctx.Log.Info("AbortOnExcecutionOrderFail: %t", abortOnExcecutionOrderFail)
 
 	projectCmds = []command.ProjectContext{}
 
@@ -76,6 +78,7 @@ func (cb *CommandScopedStatsProjectCommandContextBuilder) BuildProjectContext(
 		// to effectively pipeline them.
 		cmd.Scope = cmd.SetProjectScopeTags(cmd.Scope)
 		projectCmds = append(projectCmds, cmd)
+		ctx.Log.Info("AbortOnExcecutionOrderFail: %t", cmd.AbortOnExcecutionOrderFail)
 	}
 
 	return
@@ -96,6 +99,7 @@ func (cb *DefaultProjectCommandContextBuilder) BuildProjectContext(
 	terraformClient terraform.Client,
 ) (projectCmds []command.ProjectContext) {
 	ctx.Log.Debug("Building project command context for %s", cmdName)
+	ctx.Log.Info("AbortOnExcecutionOrderFail: %t", abortOnExcecutionOrderFail)
 
 	var steps []valid.Step
 	switch cmdName {
@@ -120,6 +124,7 @@ func (cb *DefaultProjectCommandContextBuilder) BuildProjectContext(
 			ctx.Log.Err("unknown state subcommand: %s", subName)
 		}
 	}
+	ctx.Log.Info("AbortOnExcecutionOrderFail: %t", abortOnExcecutionOrderFail)
 
 	// If TerraformVersion not defined in config file look for a
 	// terraform.require_version block.
